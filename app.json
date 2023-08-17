@@ -1,0 +1,408 @@
+{
+  "_comment": "This file is generated. Please edit .homeycompose/app.json instead.",
+  "id": "nl.mennovanhout.loops",
+  "version": "2.1.2",
+  "compatibility": ">=5.0.0",
+  "sdk": 3,
+  "platforms": [
+    "local"
+  ],
+  "name": {
+    "en": "Loops",
+    "nl": "Loops"
+  },
+  "description": {
+    "en": "Add infinite possibilities to your Homey Flows with the power of loops.",
+    "nl": "Voeg oneindige mogelijkheden toe aan je Homey Flows met de kracht van loops."
+  },
+  "category": [
+    "tools"
+  ],
+  "tags": {
+    "en": [
+      "loops",
+      "flows",
+      "advancedflows",
+      "logics",
+      "logic",
+      "advanced",
+      "repeat"
+    ],
+    "nl": [
+      "loops",
+      "flows",
+      "advancedflows",
+      "logica",
+      "geavanceerd",
+      "herhalen"
+    ]
+  },
+  "permissions": [],
+  "images": {
+    "small": "/assets/images/small.png",
+    "large": "/assets/images/large.png",
+    "xlarge": "/assets/images/xlarge.png"
+  },
+  "author": {
+    "name": "Menno van Hout"
+  },
+  "brandColor": "#00b300",
+  "support": "mailto:info@mennovanhout.nl",
+  "homepage": "https://mennovanhout.nl",
+  "contributing": {
+    "donate": {
+      "bunq": {
+        "username": "mennovanhout"
+      }
+    }
+  },
+  "homeyCommunityTopicId": 85754,
+  "flow": {
+    "triggers": [
+      {
+        "title": {
+          "en": "Loop with name ... finished",
+          "nl": "Loop met naam ... is afgelopen"
+        },
+        "titleFormatted": {
+          "en": "Loop [[name]] finished",
+          "nl": "Loop [[name]] is afgelopen"
+        },
+        "args": [
+          {
+            "type": "autocomplete",
+            "name": "name",
+            "title": "Name",
+            "placeholder": {
+              "en": "Pick a name",
+              "nl": "Kies een naam"
+            }
+          }
+        ],
+        "id": "when-loop-with-name-finished"
+      },
+      {
+        "title": {
+          "en": "Loop ... iterates",
+          "nl": "Loop ... itereert"
+        },
+        "titleFormatted": {
+          "en": "Loop [[name]] iterates",
+          "nl": "Loop [[name]] itereert"
+        },
+        "args": [
+          {
+            "type": "autocomplete",
+            "name": "name",
+            "placeholder": {
+              "en": "Pick a name",
+              "nl": "Kies een naam"
+            }
+          }
+        ],
+        "tokens": [
+          {
+            "type": "number",
+            "name": "value",
+            "title": {
+              "en": "Iteration value",
+              "nl": "Iteratie waarde"
+            },
+            "example": {
+              "en": "50",
+              "nl": "50"
+            }
+          },
+          {
+            "type": "number",
+            "name": "iteration",
+            "title": {
+              "en": "Iteration",
+              "nl": "Iteratie"
+            },
+            "example": {
+              "en": "1",
+              "nl": "1"
+            }
+          },
+          {
+            "type": "number",
+            "name": "maxIterations",
+            "title": {
+              "en": "Max iterations",
+              "nl": "Maximum iteraties"
+            },
+            "example": {
+              "en": "20",
+              "nl": "20"
+            }
+          }
+        ],
+        "id": "when-loop-with-name-iterates"
+      },
+      {
+        "title": {
+          "en": "Loop with name ... started",
+          "nl": "Loop met naam ... gestart is"
+        },
+        "titleFormatted": {
+          "en": "Loop [[name]] started",
+          "nl": "Loop [[name]] is gestart"
+        },
+        "args": [
+          {
+            "type": "autocomplete",
+            "name": "name",
+            "title": "Name",
+            "placeholder": {
+              "en": "Pick a name",
+              "nl": "Kies een naam"
+            }
+          }
+        ],
+        "id": "when-loop-with-name-started"
+      }
+    ],
+    "conditions": [
+      {
+        "title": {
+          "en": "A loop with name ... !{{is|isn't}} running",
+          "nl": "Een loop met naam ... !{{is|is niet}} bezig"
+        },
+        "titleFormatted": {
+          "en": "A loop with name [[name]] !{{is|isn't}} running",
+          "nl": "Een loop met naam [[name]] !{{is|is niet}} bezig"
+        },
+        "args": [
+          {
+            "type": "autocomplete",
+            "name": "name",
+            "placeholder": {
+              "en": "Choose a name"
+            }
+          }
+        ],
+        "id": "loop-with-name-is-running"
+      }
+    ],
+    "actions": [
+      {
+        "title": {
+          "en": "Kill loop with name ..., should trigger finished card ...",
+          "nl": "Stop loop met naam ..., moet afgelopen kaart triggeren ..."
+        },
+        "titleFormatted": {
+          "en": "Kill loop [[name]], should trigger finished card [[triggerKillCard]]",
+          "nl": "Stop loop [[name]], moet afgelopen kaart triggeren [[triggerKillCard]]"
+        },
+        "args": [
+          {
+            "type": "autocomplete",
+            "name": "name",
+            "title": "Name",
+            "placeholder": {
+              "en": "Pick a name",
+              "nl": "Kies een naam"
+            }
+          },
+          {
+            "type": "checkbox",
+            "name": "triggerKillCard",
+            "title": {
+              "en": "Trigger kill card",
+              "nl": "Trigger kill card"
+            }
+          }
+        ],
+        "id": "then-kill-loop-with-name"
+      },
+      {
+        "title": {
+          "en": "Start loop with name ... and run ... times with a delay in between of ...",
+          "nl": "Start loop met naam ... en herhaal ... keer met een pauze tussendoor van ..."
+        },
+        "titleFormatted": {
+          "en": "Start loop [[name]] and run [[times]] times with a delay in between of [[delay]] [[durationInUnits]]",
+          "nl": "Start loop [[name]] en herhaal [[times]] keer met een pauze tussendoor van [[delay]] [[durationInUnits]]"
+        },
+        "args": [
+          {
+            "type": "autocomplete",
+            "name": "name",
+            "title": "Name",
+            "placeholder": {
+              "en": "Pick a name",
+              "nl": "Kies een naam"
+            }
+          },
+          {
+            "type": "number",
+            "name": "times",
+            "title": {
+              "en": "Times",
+              "nl": "Keer"
+            },
+            "placeholder": {
+              "en": "Pick a number",
+              "nl": "Kies een getal"
+            },
+            "min": 1,
+            "max": 9999999,
+            "step": 1
+          },
+          {
+            "type": "number",
+            "name": "delay",
+            "title": {
+              "en": "Delay",
+              "nl": "pauze"
+            },
+            "placeholder": {
+              "en": "Pick a number",
+              "nl": "Kies een getal"
+            },
+            "min": 1,
+            "max": 9999999,
+            "step": 1
+          },
+          {
+            "type": "dropdown",
+            "name": "durationInUnits",
+            "title": {
+              "en": "Duration in units",
+              "nl": "Duur in eenheden"
+            },
+            "values": [
+              {
+                "id": "milliseconds",
+                "title": {
+                  "en": "milliseconds",
+                  "nl": "milliseconden"
+                }
+              },
+              {
+                "id": "seconds",
+                "title": {
+                  "en": "seconds",
+                  "nl": "seconden"
+                }
+              },
+              {
+                "id": "minutes",
+                "title": {
+                  "en": "minutes",
+                  "nl": "minuten"
+                }
+              }
+            ]
+          }
+        ],
+        "id": "then-start-loop-with-name"
+      },
+      {
+        "title": {
+          "en": "Start loop with name ... and transition from ... to ... in ... steps with a delay in between of ...",
+          "nl": "Start loop met naam ... en transitioneer van ... naar ... in ... stappen met een pauze tussendoor van ..."
+        },
+        "titleFormatted": {
+          "en": "Start loop [[name]] and transition from [[from]] to [[to]] in [[steps]] steps with a delay in between of [[delay]] [[durationInUnits]]",
+          "nl": "Start loop [[name]] en transitioneer van [[from]] naar [[to]] in [[steps]] stappen met een pauze tussendoor van [[delay]] [[durationInUnits]]"
+        },
+        "args": [
+          {
+            "type": "autocomplete",
+            "name": "name",
+            "title": "Name",
+            "placeholder": {
+              "en": "Pick a name",
+              "nl": "Kies een naam"
+            }
+          },
+          {
+            "type": "number",
+            "name": "from",
+            "title": {
+              "en": "From",
+              "nl": "Van"
+            },
+            "placeholder": {
+              "en": "Pick a number",
+              "nl": "Kies een getal"
+            }
+          },
+          {
+            "type": "number",
+            "name": "to",
+            "title": {
+              "en": "To",
+              "nl": "Naar"
+            },
+            "placeholder": {
+              "en": "Pick a number",
+              "nl": "Kies een getal"
+            }
+          },
+          {
+            "type": "number",
+            "name": "steps",
+            "title": {
+              "en": "Steps",
+              "nl": "Stappen"
+            },
+            "placeholder": {
+              "en": "Pick a number",
+              "nl": "Kies een getal"
+            }
+          },
+          {
+            "type": "number",
+            "name": "delay",
+            "title": {
+              "en": "Delay",
+              "nl": "pauze"
+            },
+            "placeholder": {
+              "en": "Pick a number",
+              "nl": "Kies een getal"
+            },
+            "min": 1,
+            "max": 9999999,
+            "step": 1
+          },
+          {
+            "type": "dropdown",
+            "name": "durationInUnits",
+            "title": {
+              "en": "Duration in units",
+              "nl": "Duur in eenheden"
+            },
+            "values": [
+              {
+                "id": "milliseconds",
+                "title": {
+                  "en": "milliseconds",
+                  "nl": "milliseconden"
+                }
+              },
+              {
+                "id": "seconds",
+                "title": {
+                  "en": "seconds",
+                  "nl": "seconden"
+                }
+              },
+              {
+                "id": "minutes",
+                "title": {
+                  "en": "minutes",
+                  "nl": "minuten"
+                }
+              }
+            ]
+          }
+        ],
+        "id": "then-start-loop-with-name-until"
+      }
+    ]
+  }
+}
