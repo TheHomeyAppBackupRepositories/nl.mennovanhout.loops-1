@@ -58,14 +58,56 @@ class Loops extends homey_1.default.App {
                 await this.loopFinishedTriggerCard?.trigger({}, { name: args.name.name });
             }
         });
+        this.killAllLoopsActionCard = this.homey.flow.getActionCard('then-kill-all-loops');
+        this.killAllLoopsActionCard.registerRunListener(async (args, state) => {
+            for (const loopName in this.runningLoops) {
+                this.stopInterval(loopName);
+                if (args.triggerKillCard) {
+                    await this.loopFinishedTriggerCard?.trigger({}, { name: loopName });
+                }
+            }
+        });
+        this.startManualLoopCard = this.homey.flow.getActionCard('start-manual-loop-with-name');
+        this.startManualLoopCard.registerArgumentAutocompleteListener('name', this.loopNameAutocompleteListener.bind(this));
+        this.startManualLoopCard.registerRunListener(async (args, state) => {
+            this.loopActionCardRunListener(args, state, 'manual');
+        });
+        this.goToNextIterationCard = this.homey.flow.getActionCard('go-to-next-iteration');
+        this.goToNextIterationCard.registerArgumentAutocompleteListener('name', this.loopNameAutocompleteListener.bind(this));
+        this.goToNextIterationCard.registerRunListener(this.goToNextIteration.bind(this));
+    }
+    async goToNextIteration(args, state) {
+        let { name } = args;
+        name = name.name;
+        if (!this.runningLoops[name]) {
+            throw Error('Loop is not running');
+        }
+        if (this.runningLoops[name][0].max === undefined) {
+            throw Error('This is not a manual loop');
+        }
+        this.runningLoops[name][0].current++;
+        this.loopIteratesTriggerCard?.trigger({ iteration: this.runningLoops[name][0].current, maxIterations: this.runningLoops[name][0].max, value: this.runningLoops[name][0].current }, { name: name });
+        if (this.runningLoops[name][0].current >= this.runningLoops[name][0].max) {
+            // Trigger finished card
+            await this.loopFinishedTriggerCard?.trigger({}, { name: name });
+            delete this.runningLoops[name];
+        }
     }
     async loopActionCardRunListener(args, state, type) {
         let { delay } = args;
+        // Manuall cards can only have 1 at the same time
+        if (type === 'manual' && this.runningLoops[args.name.name] !== undefined) {
+            throw Error('Loop already running');
+        }
         if (args.durationInUnits === 'seconds') {
             delay *= 1000;
         }
         if (args.durationInUnits === 'minutes') {
             delay *= 1000 * 60;
+        }
+        if (type == 'times' && args.times == 0) {
+            throw ('Loop count needs to be higher than 0');
+            return;
         }
         await this.loopStartedTriggerCard?.trigger({}, { name: args.name.name });
         switch (type) {
@@ -76,6 +118,12 @@ class Loops extends homey_1.default.App {
             case 'until':
                 await this.untilLoopActionCard(args.from, args.to, args.steps, args.name.name, delay);
                 break;
+            case 'manual':
+                await this.manualLoopActionCard(args.name.name, args.times);
+                break;
+        }
+        if (type === 'manual') {
+            return;
         }
         await this.loopFinishedTriggerCard?.trigger({}, { name: args.name.name });
     }
@@ -84,7 +132,7 @@ class Loops extends homey_1.default.App {
             this.loopIteratesTriggerCard?.trigger({ iteration: 1, maxIterations: times, value: 0 }, { name: loopName });
             let i = 1;
             const intervalId = setInterval(async () => {
-                await this.loopIteratesTriggerCard?.trigger({ iteration: i + 1, maxIterations: times, value: 0 }, { name: loopName });
+                await this.loopIteratesTriggerCard?.trigger({ iteration: i + 1, maxIterations: times, value: i }, { name: loopName });
                 if (++i === times) {
                     this.stopInterval(loopName, intervalId);
                     resolve(true);
@@ -127,6 +175,16 @@ class Loops extends homey_1.default.App {
             }
         });
     }
+    async manualLoopActionCard(loopName, times) {
+        if (!this.runningLoops[loopName]) {
+            this.runningLoops[loopName] = [];
+        }
+        this.runningLoops[loopName].push({
+            current: 1,
+            max: times
+        });
+        this.loopIteratesTriggerCard?.trigger({ iteration: 1, maxIterations: times, value: 0 }, { name: loopName });
+    }
     addLoopToRunningList(loopName, identifier) {
         if (!this.runningLoops[loopName]) {
             this.runningLoops[loopName] = [];
@@ -137,11 +195,17 @@ class Loops extends homey_1.default.App {
         if (!this.runningLoops[loopName]) {
             return;
         }
+        if (this.runningLoops[loopName][0].max !== undefined) {
+            this.runningLoops[loopName] = [];
+            delete this.runningLoops[loopName];
+            return;
+        }
         if (identifier === undefined) {
             this.runningLoops[loopName].forEach((id) => {
                 clearInterval(id);
             });
             this.runningLoops[loopName] = [];
+            delete this.runningLoops[loopName];
             return;
         }
         clearInterval(identifier);
@@ -181,6 +245,8 @@ class Loops extends homey_1.default.App {
             this.startLoopActionCardUntil,
             this.killLoopActionCard,
             this.andLoopIsRunningCard,
+            this.startManualLoopCard,
+            this.goToNextIterationCard
         ];
         const loopNames = [];
         for (const loopCard of loopCards) {

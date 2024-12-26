@@ -1,7 +1,7 @@
 {
   "_comment": "This file is generated. Please edit .homeycompose/app.json instead.",
   "id": "nl.mennovanhout.loops",
-  "version": "2.1.2",
+  "version": "2.2.0",
   "compatibility": ">=5.0.0",
   "sdk": 3,
   "platforms": [
@@ -186,6 +186,93 @@
       }
     ],
     "actions": [
+      {
+        "title": {
+          "en": "Start next iteration for loop",
+          "nl": "Start volgende iteratie voor loop"
+        },
+        "titleFormatted": {
+          "en": "Start next iteration for loop [[name]]",
+          "nl": "Start volgende iteratie voor loop [[name]]"
+        },
+        "hint": {
+          "en": "Triggers the iterates card for loop",
+          "nl": "Triggert de iteratie kaart for loop"
+        },
+        "args": [
+          {
+            "type": "autocomplete",
+            "name": "name",
+            "placeholder": {
+              "en": "Pick a name",
+              "nl": "Kies een naam"
+            }
+          }
+        ],
+        "id": "go-to-next-iteration"
+      },
+      {
+        "title": {
+          "en": "Start manual loop with name ... and run ... times",
+          "nl": "Start handmatige loop met naam ... en herhaal ... keer"
+        },
+        "titleFormatted": {
+          "en": "Start manual loop with name [[name]] and run [[times]] times",
+          "nl": "Start handmatige loop met naam [[name]] en herhaal [[times]] keer"
+        },
+        "hint": {
+          "en": "A manual loop is a loop that does not iterate by itself, you need to use the go to next iteration card.",
+          "nl": "Een manuele loop is een loop die niet vanzelf itereert, hiervoor dien je de start volgende iteratie kaart te gebruiken."
+        },
+        "args": [
+          {
+            "type": "autocomplete",
+            "name": "name",
+            "title": "Name",
+            "placeholder": {
+              "en": "Pick a name",
+              "nl": "Kies een naam"
+            }
+          },
+          {
+            "type": "number",
+            "name": "times",
+            "title": {
+              "en": "Times",
+              "nl": "Keer"
+            },
+            "placeholder": {
+              "en": "Pick a number",
+              "nl": "Kies een getal"
+            },
+            "min": 1,
+            "max": 9999999,
+            "step": 1
+          }
+        ],
+        "id": "start-manual-loop-with-name"
+      },
+      {
+        "title": {
+          "en": "Kill all loops, should trigger finished cards ...",
+          "nl": "Stop alle loops, moet afgelopen kaart triggeren ..."
+        },
+        "titleFormatted": {
+          "en": "Kill all loops, should trigger finished card [[triggerKillCard]]",
+          "nl": "Stop alle loops, moet afgelopen kaart triggeren [[triggerKillCard]]"
+        },
+        "args": [
+          {
+            "type": "checkbox",
+            "name": "triggerKillCard",
+            "title": {
+              "en": "Trigger kill card",
+              "nl": "Trigger kill card"
+            }
+          }
+        ],
+        "id": "then-kill-all-loops"
+      },
       {
         "title": {
           "en": "Kill loop with name ..., should trigger finished card ...",
